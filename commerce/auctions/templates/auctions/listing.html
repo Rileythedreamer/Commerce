@@ -1,4 +1,4 @@
-ls{% extends "auctions/layout.html" %}
+{% extends "auctions/layout.html" %}
 
 {% block title %}
     {{ listing.title }}
@@ -6,19 +6,132 @@ ls{% extends "auctions/layout.html" %}
 
 {% block body %}
 
-<div class="card mb-3" style="max-width: 540px;">
-  <div class="row g-0">
-    <div class="col-md-4">
-      <img src="..." class="img-fluid rounded-start" alt="...">
+{% for message in messages %}
+    <div class="alert alert-{{message.tags}} mx-auto rounded text-center shadow-sm w-75">
+      {{message}}
     </div>
-    <div class="col-md-8">
-      <div class="card-body">
-        <h5 class="card-title"> {{lsiting.title}} </h5>
-        <p class="card-text"> {{listing.description}} </p>
-        <p class="card-text"><small class="text-muted">{{listing.author}}</small></p>
+{% endfor %}
+
+<div class="card w-75 mx-auto mb-4  shadow-lg border-0 rounded-4 overflow-hidden">
+  <div class="row ">
+    <!-- Image Section -->
+    {% if listing.image_url %}
+    <div class="col-lg-5 bg-light d-flex align-items-center">
+      
+        <img src="{{listing.image_url}}" class="img-fluid w-100 h-100 object-fit-cover rounded-start" alt="{{listing.title}}">
+      
+    </div>
+    {% endif %}
+    <!-- Content Section -->
+    <div class="col-lg-7">
+      <div class="card-body p-4">
+        <h3 class="card-title fw-bold mb-3">{{listing.title}}</h3>
+
+        <div class="mb-3">
+            <span class="badge bg-secondary me-2">{{category}}</span>
+        </div>
+
+        <p class="card-text text-muted mb-4">{{listing.description}}</p>
+
+        <div class="d-flex align-items-center mb-3">
+          {% if listing.status == "Active" %}
+            <span class="badge bg-success px-3 py-2">Active</span>
+          {% elif listing.status == "Closed" %}
+            <span class="badge bg-danger px-3 py-2">Closed</span>
+          {% endif %}
+        </div>
+
+        <div class="d-flex justify-content-between mb-4">
+          <div class="fs-5 fw-semibold text-primary">Starting Bid: {{listing.starting_bid}}</div>
+          <div class="fs-5 fw-semibold text-primary">Highest Bid: {{listing.highest_bid}}</div>
+        </div>
+
+        <div class="mb-4">
+          {% if listing.status == "Active" %}
+            {% if request.user == listing.owner  %}
+              <a href="{% url 'close' listing.id %}" class="btn btn-danger w-100">
+                Close Auction
+              </a>
+            {% elif user.is_authenticated %}
+              <form action="{% url 'bid' listing.id %}" method="post" class="d-flex flex-column">
+                {% csrf_token %}
+                <div class="mb-3">
+                  {{ bid_form }}
+                </div>
+                <button type="submit" class="btn btn-primary">Place Bid</button>
+              </form>
+
+              <form action="{% url 'modify_watchlist' listing.id %}" method="POST" class="my-3">
+                {% csrf_token %}
+                
+                {% if listing.id  in watched_listing_ids %}
+                
+                  <button 
+                    class="btn btn-warning w-100 text-center"
+                    type="submit" name="action" value="remove">
+                    Remove From WatchList
+                  </button>
+                {% else %}
+                  <button 
+                  class="btn btn-secondary w-100 text-center"
+                  type="submit" name="action" value="add">
+                  Add To WatchList
+                </button>
+
+                {% endif %}
+              </form>
+              
+            {% endif %}
+          {% else %}
+              <div class="shadow-sm  text-success rounded border text-center font-weight-bold">
+                {%if request.user == listing.winner %}
+                  YOU HAVE WON THE AUCTION!
+                {% else %}
+                Auction Winner: {{listing.winner}}
+                {% endif %}
+              </div>
+          {% endif %}
+        </div>
+
+        <p class="card-text">
+          <small class="text-muted">Listed by <strong>{{listing.owner}}</strong></small>
+        </p>
       </div>
     </div>
   </div>
+  <div class="card-footer row  d-flex flex-column align-items-start justify-content-between mt-3">
+    <ul class="list-group w-100">
+      {% for comment in comments %}
+        <li class="list-group-item">
+          <div class="">
+            <div class="">
+              <p>
+                {{comment.content}}
+              </p>
+            </div>
+            <div class=" d-flex flex-row justify-content-between align-items-center">
+              <p class="card-text">
+                <small class="text-muted">Commented by <strong>{{comment.author}}</strong></small>
+              </p>
+              <p class="card-text">
+                <small class="text-muted">Commented on <strong>{{comment.date_added}}</strong></small>
+              </p>
+            </div>
+          </div>
+        </li>
+      {% empty %}
+        <li class="  text-muted" style="list-style:none;">
+          No Comments have been added yet. Be the First to comment Below ...
+        </li>
+      {% endfor %}
+    </ul>
+    <hr>
+    <form action="{% url 'comment' listing.id %}" method="POST" class="w-75 pl-3">
+      {% csrf_token %}
+      {{comment_form}}
+      <input class="btn btn-primary my-3" type="submit" value="Add Comment">
+    </form>
+  </div>
 </div>
-    
+
 {% endblock %}

@@ -1,7 +1,45 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>{{page_title}}</h2>
+    <div class="container-fluid">
+        <div class="row align-items-center justify-content-center mx-auto">
+            {% for listing in listings %}
 
-    TODO
+            <div class="card col-lg-3 mx-4 my-3 p-0">
+                {% if listing.image_url %}
+                    <img src="{{ listing.image_url}}" class="card-img-top img-fluid object-fit" alt="{{listing.title}}">
+                {% endif %}
+                <div class="card-body">
+                  <h5 class="card-title">{{listing.title}}</h5>
+                  <p class="card-text">{{listing.description}}</p>
+                </div>
+                
+                <ul class="list-group list-group-flush">
+                    {% for category in listing.category_set.all %}
+                        <li class="list-group-item">
+                            {{category.name}}
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="card-body">
+                  <a href="{% url 'listing' listing.id %}" class="card-link">View Details</a>
+                </div>
+              </div>
+            {% empty %}
+            <div class="alert alert-secondary">
+                {% if page_title == "Active Listings" %}
+                The are no {{page_title}}.
+                {% elif page_title == "Watchlist" %}
+                The are no active listings in your {{page_title}}.
+                {% else %}
+                The are no active listings in {{page_title}}.
+                {% endif %}
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+    
+        
+
 {% endblock %}

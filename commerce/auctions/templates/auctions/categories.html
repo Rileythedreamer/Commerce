@@ -1,0 +1,21 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    Categories
+{% endblock %}
+
+{% block body %}
+{% if not empty %}
+<div class="list-group mx-auto w-50 ">
+    {% for cat in categories %}    
+        <a href="{% url 'category' category_name=cat %}" class="list-group-item list-group-item-action" aria-current="true">
+            {{cat}}
+        </a>
+    {% endfor %}
+</div>
+{% elif empty %}
+<div class="alert alert-info shadow-lg w-50 mx-auto text-center">
+    There are no categories available yet.
+</div>
+{% endif %}
+{% endblock %}

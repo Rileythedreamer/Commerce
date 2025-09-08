@@ -1,0 +1,36 @@
+[
+    {
+      "model": "auctions.listing",
+      "pk": 1,
+      "fields": {
+        "title": "Plasma Blaster Pistol",
+        "description": "Sleek handheld energy weapon from the future, fires concentrated plasma bolts. Perfect for intergalactic duels.",
+        "starting_bid": 150,
+        "image_url": "https://images.unsplash.com/photo-1609952468651-61e73a2e45a2",
+        "category": "Electronics"
+      }
+    },
+    {
+      "model": "auctions.listing",
+      "pk": 2,
+      "fields": {
+        "title": "Hoverboard Mini-X",
+        "description": "Anti-gravity hoverboard with LED trails and smart balance technology. Glide through the city like in your favorite sci-fi movie.",
+        "starting_bid": 300,
+        "image_url": "https://images.unsplash.com/photo-1611078482797-7cb7e0326c0a",
+        "category": "Toys"
+      }
+    },
+    {
+      "model": "auctions.listing",
+      "pk": 3,
+      "fields": {
+        "title": "Alien Artifact Crystal",
+        "description": "Mysterious glowing crystal of unknown origin, rumored to hold otherworldly powers. Great for collectors and cosplayers.",
+        "starting_bid": 500,
+        "image_url": "https://images.unsplash.com/photo-1581090700227-d204b5a90796",
+        "category": "Collectibles"
+      }
+    }
+  ]
+  

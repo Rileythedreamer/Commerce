@@ -8,6 +8,7 @@
     <form action="{% url 'create' %}" method="POST">
         {{ listing_form }}
         {% csrf_token %}
-        <input type="submit" value="Create Listing" class="btn btn-primary w-25">
+        <input type="submit" value="Create Listing" class="btn btn-primary w-25 my-3">
+        
     </form>
 {% endblock  %}
